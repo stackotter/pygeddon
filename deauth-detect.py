@@ -48,13 +48,16 @@ def sniffmgmt(pkt):
 
 
 if len(sys.argv) < 2:
-  print("usage: sniff.py <iface>")
+  print("usage: deauth-detect.py <iface>")
   sys.exit(-1)
+
+print()
+print("Started Sniffing")
 
 sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
 
-# when ctrl + c is pressed, write results to disk
-with open('output.txt', 'a') as f:
-  f.write(",".join(["ssid", "cli", "lastseen"]) + "\r\n")
-  for key in found:
-    f.write(",".join(['"%s"' % x for x in [ found[key]['ssid'], found[key]['cli'], found[key]['lastseen']]]) + "\r\n")
+# Uncomment to save discovered APs to output.txt
+# with open('output.txt', 'a') as f:
+#   f.write(",".join(["ssid", "cli", "lastseen"]) + "\r\n")
+#   for key in found:
+#     f.write(",".join(['"%s"' % x for x in [ found[key]['ssid'], found[key]['cli'], found[key]['lastseen']]]) + "\r\n")

@@ -5,7 +5,11 @@ import time
 import subprocess
 
 client = "FF:FF:FF:FF:FF:FF" # Use FF:FF:FF:FF:FF:FF to deauth everyone on that network. Use a specific mac address to only deauth a certain device
-conf.iface = "en0" # The interface used to send deauth packets
+
+if len(sys.argv) < 2:
+  print("usage: deauth.py <iface>")
+  sys.exit(-1)
+conf.iface = sys.argv[1]
 
 # Sniffer Code:
 found = {}
@@ -37,7 +41,7 @@ for key,probe in found.items():
 # Print out the list of discovered APs and their index so that the user can choose one
 for i in range(len(probe_list)):
   item = probe_list[i]
-  print(str(i) + " : " + str(item[1]["ssid"]))
+  print(str(i) + " : " + str(item[1]["ssid"])[2:-1])
 
 # Get & process user input
 n = ""
