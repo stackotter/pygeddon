@@ -4,14 +4,24 @@ from datetime import datetime
 import sys
 import time
 
-found = {}
+hosts = {}
 
 count = 0
-threshold = 3
-timeout = 1000
+threshold = 3 # Number of deauth frames that need to be detected within timeout milliseconds of eachother to trigger system
+timeout = 1000 # Maximum amount of time between deauth frames for it to be considered an attack (in milliseconds)
 last = int(round(time.time() * 1000))
 
-hosts = {}
+if len(sys.argv) < 2:
+  print("usage: deauth-detect.py <iface>")
+  sys.exit(-1)
+
+# WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
+# Select channel
+channel = ""
+while channel.isdigit() != True:
+  channel = input("Channel to use: ")
+os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
+time.sleep(0.5)
 
 def sniffmgmt(pkt):
   global last
@@ -46,11 +56,6 @@ def sniffmgmt(pkt):
     mac = pkt.addr2
     hosts[mac] = {"ssid": ssid, "mac": mac}
 
-
-if len(sys.argv) < 2:
-  print("usage: deauth-detect.py <iface>")
-  sys.exit(-1)
-
 print()
 print("Started Sniffing")
 
@@ -59,5 +64,5 @@ sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
 # Uncomment to save discovered APs to output.txt
 # with open('output.txt', 'a') as f:
 #   f.write(",".join(["ssid", "cli", "lastseen"]) + "\r\n")
-#   for key in found:
-#     f.write(",".join(['"%s"' % x for x in [ found[key]['ssid'], found[key]['cli'], found[key]['lastseen']]]) + "\r\n")
+#   for key in hosts:
+#     f.write(",".join(['"%s"' % x for x in [ hosts[key]['ssid'], hosts[key]['cli'], hosts[key]['lastseen']]]) + "\r\n")

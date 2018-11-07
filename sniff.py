@@ -1,12 +1,23 @@
 # Output is saved to output.txt when program is terminated (it is also printed to the terminal while running though).
-
+# Remove the channel selection code to make this compatible with linux.
 from scapy.all import *
 from datetime import datetime
 import sys
 import time
 
-found = {}
+if len(sys.argv) < 2:
+  print("usage: sniff.py <iface>")
+  sys.exit(-1)
 
+# WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
+# Linux compatibility will be added soon
+channel = ""
+while channel.isdigit() != True:
+  channel = input("Channel to use: ")
+os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
+time.sleep(0.5)
+
+found = {}
 
 def sniffmgmt(p):
   stamgmtstypes = (0, 2, 4)
@@ -16,11 +27,6 @@ def sniffmgmt(p):
     key = "%s_%s" % (ssid, p.addr2)
     found[key] = probe
     print(probe)
-
-
-if len(sys.argv) < 2:
-  print("usage: sniff.py <iface>")
-  sys.exit(-1)
 
 sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
 
