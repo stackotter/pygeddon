@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+# Output is saved to output.txt when program is terminated (it is also printed to the terminal while running though).
+
 from scapy.all import *
 from datetime import datetime
 import sys
@@ -23,7 +24,7 @@ if len(sys.argv) < 2:
 
 sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
 
-# when ctrl + c is pressed, write results to disk
+# When ctrl+c is pressed this code writes discovered APs to output.txt
 with open('output.txt', 'a') as f:
   f.write(",".join(["ssid", "cli", "lastseen"]) + "\r\n")
   for key in found:

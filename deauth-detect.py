@@ -24,6 +24,8 @@ def sniffmgmt(pkt):
     ap = pkt.addr2
     victim = pkt.addr1
     last = int(round(time.time() * 1000))
+
+    # Print deauth frame details
     if count == threshold:
       print("Deauth Attack!!")
       print()
@@ -33,16 +35,16 @@ def sniffmgmt(pkt):
         print("host   : unknown")
       print("ap     : " + ap)
       print("victim : " + victim)
-      print()
+      print("press s and then enter for details, press enter to continue")
       if input() is "s":
         print()
         print(pkt.show())
         print()
+  # If packet is beacon packet add it to a dictionary for converting mac adresses to SSIDs
   if pkt.haslayer(Dot11) and pkt.type == 0 and pkt.subtype == 0x08 and hasattr(pkt, 'info'):
     ssid = ( len(pkt.info) > 0 and pkt.info != "\x00" ) and pkt.info or '<hidden>'
     mac = pkt.addr2
     hosts[mac] = {"ssid": ssid, "mac": mac}
-
 
 
 if len(sys.argv) < 2:
