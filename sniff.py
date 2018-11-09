@@ -13,7 +13,7 @@ if len(sys.argv) < 2:
 # Linux compatibility will be added soon
 channel = ""
 while channel.isdigit() != True:
-  channel = input("Channel to use: ")
+  channel = input("channel to use : ")
 os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
 time.sleep(0.5)
 
