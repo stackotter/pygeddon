@@ -26,6 +26,10 @@ while channel.isdigit() != True:
 os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
 time.sleep(0.5)
 
+manual = input("0 : scan for targets \n1 : manual target entry\nchoice : ")
+while manual != "0" and manual != "1":
+  manual = intput("Invalid choice\nchoice : ")
+
 # Function to process captured packets
 def sniffmgmt(p):
   stamgmtstypes = (0, 2, 4)
@@ -72,7 +76,14 @@ def discover():
 
   aps = list(map(int, n.split(",")))
 
-discover()
+if manual == "0":
+  discover()
+
+if manual == "1":
+  # TODO: Add option to add multiple mac addresses
+  probe_list[0][1]["cli"] = input("AP MAC address : ")
+  aps = [0]
+  # TODO: Check if mac address is valid
 
 # Send packets forever
 while True:
