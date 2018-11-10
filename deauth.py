@@ -1,5 +1,3 @@
-# To make this file compatible with linux comment out the channel selection code
-
 from scapy.all import *
 from datetime import datetime
 import sys
@@ -23,13 +21,14 @@ manual = input("0 : scan for target APs \n1 : manual target AP entry\nchoice : "
 while manual != "0" and manual != "1":
   manual = input("Invalid choice\nchoice : ")
 
-# WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
-# Select channel
-channel = ""
-while channel.isdigit() != True:
-  channel = input("channel to use : ")
-os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " |tee &")
-time.sleep(0.5)
+if sys.platform.startswith('darwin'):
+    # WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
+    # Select channel
+    channel = ""
+    while channel.isdigit() != True:
+      channel = input("channel to use : ")
+    os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " |tee &")
+    time.sleep(0.5)
 
 # Function to process captured packets
 def sniffmgmt(p):
