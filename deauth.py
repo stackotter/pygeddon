@@ -30,9 +30,9 @@ if sys.platform.startswith('darwin'):
     time.sleep(0.5)
 
 if sys.platform.startswith('linux'):
-    LXchannel = ""
+    LXchannel = input("channel to use : ")
     if LXchannel.isdigit() != True:
-        sys.run("iwconfig" + conf.iface + "channel" + LXchannel)
+        os.system("iwconfig " + conf.iface + " channel " + LXchannel)
 
 # Function to process captured packets
 def sniffmgmt(p):
