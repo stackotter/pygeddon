@@ -8,3 +8,8 @@ Can deauth single or multiple networks at once but still needs the channel to be
 
 Can detect deauth frames and display a basic overview of the deauth packet. (deauth-detect.py)
 
+# Planned Features
+
+Client discovery
+Tracking which networks devices are on
+Use client tracking to deauth a device on whichever networks it tries to connect to 😂.

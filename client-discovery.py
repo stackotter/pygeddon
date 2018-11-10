@@ -13,4 +13,4 @@ def sniffmgmt(p):
                 print(p.addr2)
                 CliList.append(p.addr2)
 
-sniff(iface=conf.iface, prn=sniffmgmt, monitor=True, count=n)
+sniff(iface=conf.iface, prn=sniffmgmt, count=n)
