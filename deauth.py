@@ -23,11 +23,16 @@ while manual != "0" and manual != "1":
 if sys.platform.startswith('darwin'):
     # WARNING: The following channel selection code only works on mac. Remove to make the code linux compatible.
     # Select channel
-    channel = ""
-    while channel.isdigit() != True:
-      channel = input("channel to use : ")
-    os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " |tee &")
+    OSXchannel = ""
+    while OSXchannel.isdigit() != True:
+      OSXchannel = input("channel to use : ")
+    os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + OSXchannel + " |tee &")
     time.sleep(0.5)
+
+if sys.platform.startswith('linux'):
+    LXchannel = ""
+    if LXchannel.isdigit() != True:
+        sys.run("iwconfig" + conf.iface + "channel" + LXchannel)
 
 # Function to process captured packets
 def sniffmgmt(p):
