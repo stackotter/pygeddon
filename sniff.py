@@ -1,5 +1,6 @@
 # Output is saved to output.txt when program is terminated (it is also printed to the terminal while running though).
 # Remove the channel selection code to make this compatible with linux.
+# Weird channel selection glitch at the moment
 from scapy.all import *
 from datetime import datetime
 import sys
@@ -14,7 +15,7 @@ if len(sys.argv) < 2:
 channel = ""
 while channel.isdigit() != True:
   channel = input("channel to use : ")
-os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
+os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " |tee &")
 time.sleep(0.5)
 
 found = {}

