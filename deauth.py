@@ -19,7 +19,7 @@ conf.iface = sys.argv[1]
 
 os.system("clear")
 
-manual = input("0 : scan for targets \n1 : manual target entry\nchoice : ")
+manual = input("0 : scan for target APs \n1 : manual target AP entry\nchoice : ")
 while manual != "0" and manual != "1":
   manual = input("Invalid choice\nchoice : ")
 
@@ -66,7 +66,7 @@ def discover():
   # Get & process user input
   n = ""
   while n.replace(",", "").isdigit() != True:
-    n = input("target (r - rescan, q - quit, use commas to seperate multiple APs) : ")
+    n = input("target AP (r - rescan, q - quit, use commas to seperate multiple APs) : ")
     if n == "r":
       os.system("clear")
       discover()
@@ -83,9 +83,16 @@ if manual == "0":
 
 if manual == "1":
   # TODO: Add option to add multiple mac addresses
-  probe_list.append([0, {"cli": input("AP MAC address : ")}])
+  probe_list.append([0, {"cli": input("target AP MAC address : ")}])
   aps = [0]
   # TODO: Check if mac address is valid
+
+# Option for manual client entry
+# TODO: Add option for multiple clients
+client = input("\nnmap can be used to find target client Mac addresses\ntarget client MAC address (* - all clients) : ")
+# TODO: Check if mac address is valid
+if client == "*":
+  client = "FF:FF:FF:FF:FF:FF"
 
 # Send packets forever
 while True:
