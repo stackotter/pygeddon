@@ -28,7 +28,7 @@ while manual != "0" and manual != "1":
 channel = ""
 while channel.isdigit() != True:
   channel = input("channel to use : ")
-os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " &")
+os.system("nohup /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport " + conf.iface + " sniff " + channel + " |tee &")
 time.sleep(0.5)
 
 # Function to process captured packets
