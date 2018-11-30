@@ -55,7 +55,7 @@ def discover_aps(iface):
     n = input("number of packets to capture : ")
   n = int(n)
 
-  sniff(iface=iface, prn=sniff_aps, monitor=True, count=n)
+  sniff(iface=iface, prn=sniff_aps, count=n) # , monitor=True
 
   # Make an array version of found_aps so that each AP has a number associated with it for the user to choose
   for key,probe in found_aps.items():
@@ -88,7 +88,7 @@ def discover_clients(iface, aps, count):
   global found_clients
   global selected_aps
   selected_aps = aps
-  sniff(iface=iface, prn=sniff_clients, monitor=True, count=count)
+  sniff(iface=iface, prn=sniff_clients, count=count) # , monitor=True
   response = {
     "found_clients": found_clients
   }
