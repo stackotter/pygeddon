@@ -1,16 +1,36 @@
-# This does not work at the moment
-import sys
-print("\n!IMPORTANT! : This file does not work yet\n")
-sys.exit()
-
 from scapy.all import *
+from helper import *
 
-def sniffmgmt(p):
-    stamgmtstypes = (0, 2, 4)
-    if p.haslayer(Dot11):
-        if p.type == 0 and p.subtype in stamgmtstypes:
-            if p.addr2 not in CliList:
-                print(p.addr2)
-                CliList.append(p.addr2)
+if len(sys.argv) < 2:
+  print("usage: deauth.py <iface>")
+  sys.exit(-1)
+conf.iface = sys.argv[1]
 
-sniff(iface=conf.iface, prn=sniffmgmt, count=n)
+select_channel(conf.iface)
+data = discover_aps(conf.iface)
+aps = [data["host_list"][index][0] for index in data["aps"]]
+
+def scan():
+  count = ""
+  while count.isdigit() != True:
+    count = input("number of packets to capture while discovering clients : ")
+  count = int(count)
+
+  print()
+  print("discovering clients...\n")
+  data = discover_clients(conf.iface, aps, count)
+
+  clients = data["found_clients"]
+  print("discovered {} clients\n".format(len(clients)))
+
+  if len(clients) != 0:
+    for client in clients:
+      print(client)
+  else:
+    print("you might be too far away to pick up device signals")
+
+  rescan = input("\ndo you want to search again? (y/n) : ").lower()
+  if rescan == "y":
+    scan()
+
+scan()
