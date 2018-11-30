@@ -29,7 +29,10 @@ def sniffmgmt(p):
     found[key] = probe
     print(probe)
 
-sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
+if sys.platform.startswith('darwin'):
+  sniff(iface=sys.argv[1], prn=sniffmgmt, monitor=True)
+else:
+  sniff(iface=sys.argv[1], prn=sniffmgmt)
 
 # When ctrl+c is pressed this code writes discovered APs to output.txt
 with open('output.txt', 'a') as f:
