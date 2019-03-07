@@ -44,7 +44,7 @@ def sniff_clients(p):
       if packet_ap in selected_aps:
         found_clients.add(packet_client)
 
-def discover_aps(iface):
+def select_aps(iface):
   global found_aps
   host_list = []
   aps = []
@@ -75,7 +75,7 @@ def discover_aps(iface):
   while n.replace(",", "").isdigit() != True:
     n = input("target AP (r - rescan, q - quit, use commas to seperate multiple APs) : ")
     if n == "r":
-      return discover_aps(iface)
+      return select_aps(iface)
     elif n == "q":
       sys.exit()
 
@@ -83,7 +83,8 @@ def discover_aps(iface):
 
   response = {
     "aps": aps,
-    "host_list": host_list
+    "host_list": host_list,
+    "found": found_aps
   }
   return response
 
@@ -97,5 +98,24 @@ def discover_clients(iface, aps, count):
     sniff(iface=iface, prn=sniff_clients, count=count)
   response = {
     "found_clients": found_clients
+  }
+  return response
+
+def discover_aps(iface):
+  global found_aps
+
+  # Capture n number of packets and use them to generate a list of available APs, their mac addresses and their SSIDs
+  count = ""
+  while count.isdigit() != True:
+    count = input("number of packets to capture : ")
+  count = int(count)
+
+  if sys.platform.startswith('darwin'):
+    sniff(iface=iface, prn=sniff_aps, monitor=True, count=count)
+  else:
+    sniff(iface=iface, prn=sniff_aps, count=n)
+
+  response = {
+    "found": found_aps
   }
   return response

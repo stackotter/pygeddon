@@ -21,3 +21,10 @@ ssid,cli,lastseen
 "b'OPTUS\xc1\xef2D328'","20:9f:db:83:9d:29","2018-11-10T15:16:54.003718"
 "b'OPTUSA62D328'","20:9f:db:83:9d:29","2018-11-10T15:16:55.847015"
 "b'OPTUSA62D328\x01\x08\x82'","20:9f:1b:ef:9d:29","2018-11-10T15:16:54.721347"
+ssid,cli,lastseen
+ssid,cli
+ssid,cli
+"b'SWR1100'","00:04:ed:3c:d3:9f"
+"b'D-Link DSL-2890AL'","b0:c5:54:d4:bb:48"
+"b'OPTUSA62D328'","20:9f:db:83:9d:29"
+"b'The CasaBrangelo'","00:04:ed:fb:44:05"

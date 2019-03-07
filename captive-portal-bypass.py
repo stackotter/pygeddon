@@ -23,7 +23,7 @@ select_channel(conf.iface)
 
 # Get AP address(es)
 if manual == "0":
-  data = discover_aps(conf.iface)
+  data = select_aps(conf.iface)
   aps = data["aps"]
   host_list = data["host_list"]
 

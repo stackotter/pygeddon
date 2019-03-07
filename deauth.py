@@ -7,7 +7,7 @@ if len(sys.argv) < 2:
 conf.iface = sys.argv[1]
 
 select_channel(conf.iface)
-response = discover_aps(conf.iface)
+response = select_aps(conf.iface)
 
 aps = response["aps"]
 host_list = response["host_list"]

@@ -8,7 +8,7 @@ hosts = {}
 
 count = 0
 threshold = 3 # Number of deauth frames that need to be detected within timeout milliseconds of eachother to trigger system
-timeout = 1000 # Maximum amount of time between deauth frames for it to be considered an attack (in milliseconds)
+timeout = 100000 # Maximum amount of time between deauth frames for it to be considered an attack (in milliseconds)
 last = int(round(time.time() * 1000))
 
 if len(sys.argv) < 2:
