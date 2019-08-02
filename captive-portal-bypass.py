@@ -37,24 +37,29 @@ if manual == "1":
 
 selected = [host_list[n][0].lower() for n in aps]
 
-print("searching for target clients")
-search = True
-while search:
-  clients = discover_clients(conf.iface, selected, 100)["found_clients"]
-  if not len(clients) is 0:
-    search = False
+while True:
+  print("searching for target clients")
+  search = True
+  while search:
+    clients = discover_clients(conf.iface, selected, 1000)["found_clients"]
+    if not len(clients) is 0:
+      search = False
 
-clients = list(clients)
+  clients = list(clients)
 
-for i in range(len(clients)):
-  print(str(i) + " : " + clients[i])
+  for i in range(len(clients)):
+    print(str(i) + " : " + clients[i])
 
-valid = False
-while not valid:
-  target_client = input("target client: ")
-  if target_client.isdigit():
-    if int(target_client) < len(clients):
-      valid = True
+  valid = False
+  while not valid:
+    target_client = input("target client: ")
+    if target_client.isdigit():
+      if int(target_client) < len(clients):
+        valid = True
+    else:
+      if target_client is "r":
+        break
+
 target_client = clients[int(target_client)]
 print(target_client)
 

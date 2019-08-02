@@ -7,7 +7,7 @@ if len(sys.argv) < 2:
 conf.iface = sys.argv[1]
 
 select_channel(conf.iface)
-data = selected_aps(conf.iface)
+data = select_aps(conf.iface)
 aps = [data["host_list"][index][0] for index in data["aps"]]
 
 def scan():
